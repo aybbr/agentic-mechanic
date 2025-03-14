@@ -85,7 +85,7 @@ ipython_config.py
 # Environment & Local Config
 .env
 .env.*
-!.env.example
+.env.example
 *.local
 
 # Python
@@ -235,3 +235,7 @@ cython_debug/
 
 # alembic
 alembic/versions/
+
+# cursor
+.cursorrules
+.cursor/rules/*.mdc
