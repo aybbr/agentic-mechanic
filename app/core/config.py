@@ -1,5 +1,7 @@
 import os
 from pydantic_settings import BaseSettings
+from typing import List, Optional, Dict, Any
+from pydantic import field_validator
 
 
 class Settings(BaseSettings):
@@ -23,6 +25,18 @@ class Settings(BaseSettings):
     JWT_SECRET_KEY: str = os.getenv("JWT_SECRET_KEY", "supersecretkey")
     JWT_ALGORITHM: str = "HS256"
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+
+    # Environment
+    ENVIRONMENT: str = os.getenv("ENVIRONMENT", "development")
+
+    # Security settings
+    CORS_ORIGINS: str = os.getenv("CORS_ORIGINS", "http://localhost:3000")
+
+    @field_validator("CORS_ORIGINS")
+    def validate_cors_origins(cls, v: str, info: Any) -> str:
+        if v == "*" and os.getenv("ENVIRONMENT", "development") != "development":
+            raise ValueError("Wildcard CORS origin (*) not allowed in production")
+        return v
 
     model_config = {
         "env_file": ".env",
